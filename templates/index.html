@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+      <div class="col-sm">
+        <div class="card bg-dark">
+            <div class="card-header">
+                Featured
+            </div>
+            {% for i in new_anime%}
+            <!-- TODO Здесь список новых ониме -->
+            <div class="card-list">{{i.name}}</div>
+            {% endfor %}
+        </div>
+      </div>
+      <div class="col-sm">
+        One of three columns
+      </div>
+    </div>
+  </div>
+{% endblock %}

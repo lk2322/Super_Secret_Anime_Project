@@ -1,0 +1,20 @@
+body{
+    background-color: #1c1f22;
+
+}
+
+div.container-fluid{
+    width: 70%;
+}
+
+div.container{
+    margin-top: 20px;
+}
+div.card-header{
+    color: white;
+}
+
+div.card-list{
+    color: white;
+    padding: 10px;
+}
