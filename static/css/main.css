@@ -3,6 +3,20 @@ body{
 
 }
 
+.sign-in {
+    margin-left: 5px;
+}
+.auth-form{
+    margin: auto;
+    margin-top: 10px;
+    width: 50%;
+    padding: 20px;
+    background-color: #292d31;
+    border-radius: 10px;
+}
+.auth-buttons {
+    margin: auto;
+}
 div.container-fluid{
     width: 70%;
 }
@@ -17,4 +31,40 @@ div.card-header{
 div.card-list{
     color: white;
     padding: 10px;
+}
+div.col-sm{
+    padding: 10px;
+}
+a.sheld{
+    color: white;
+}
+div.wrapper
+{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 5px;
+    grid-auto-rows: minmax(0px, auto);
+    padding: 5px;
+    color: white;
+    border: 4px white;
+}
+a
+{
+    text-decoration: none;
+}
+
+.prev{
+    margin-left: 35%;
+
+}
+div.w_one
+{
+    grid-column: 1;
+    grid-row: 1;
+    height: 120px;
+}
+
+div.w_two{
+    grid-column: 2;
+    grid-row: 1;
 }
