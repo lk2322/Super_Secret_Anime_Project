@@ -1,10 +1,12 @@
 import datetime
 import os
+import pathlib
 
 from flask import Flask, render_template, redirect, url_for, request, Response
 from sqlalchemy import desc, func
 
 from add_video import save_video
+from config import Config
 from utils.id_gen import id_generator
 
 from data import db_session
@@ -18,7 +20,7 @@ from flask_login import LoginManager, login_user, current_user
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'sadasd'
-db_session.global_init("D:\projects\Super_Secret_Anime_Project\db\main.db")
+db_session.global_init("main.db")
 app.register_blueprint(get_video.blueprint)
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -148,8 +150,7 @@ def add_edit_anime(form, edit: bool, anime_id: int = 0):
     anime.ep_col = form.ep_col.data
     anime.description = form.description.data
     anime.release_year = form.release_year.data
-    # Костыль, потому что при редактировании озвучки выводятся в виде списка
-    if not form.dubs.data.startswith('[') or form.dubs.data:
+    if form.dubs.data:
         dubs = form.dubs.data.split(',')
         for i in dubs:
             dub = db_sess.query(Dubs).filter(Dubs.name == i).first()
@@ -171,7 +172,7 @@ def add_edit_anime(form, edit: bool, anime_id: int = 0):
     db_sess.close()
 
 
-@app.route('/edit_anime/<int:anime_id>', methods=['GET', 'POST'])
+@app.route('/anime/<int:anime_id>/edit_anime', methods=['GET', 'POST'])
 def edit_anime(anime_id):
     if request.method == 'GET':
         if check_admin(current_user):
@@ -271,6 +272,10 @@ def bookmark(anime_id):
 
 
 def init():
+
+    pathlib.Path('static/img/posters').mkdir(parents=True, exist_ok=True)
+    pathlib.Path('static/video').mkdir(parents=True, exist_ok=True)
+    pathlib.Path('temp').mkdir(parents=True, exist_ok=True)
     db_sess = db_session.create_session()
     if not db_sess.query(Roles).filter(Roles.name == 'Admin').first():
         role = Roles(name='Admin')
@@ -279,12 +284,13 @@ def init():
         role = db_sess.query(Roles).filter(Roles.name == 'Admin').first()
     # TODO Добавлять админов из env
     user = db_sess.query(User).filter(User.id == 1).first()
-    if role not in user.roles:
-        user.roles.append(role)
+    if user:
+        if role not in user.roles:
+            user.roles.append(role)
     db_sess.commit()
     db_sess.close()
 
 
 if __name__ == "__main__":
     init()
-    app.run('0.0.0.0', 80, threaded=True, debug=True)
+    app.run(Config.ip, Config.port, threaded=True, debug=True)

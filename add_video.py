@@ -3,6 +3,8 @@ import subprocess
 from multiprocessing import Process
 from typing import NamedTuple
 import json
+
+from config import Config
 from utils.id_gen import id_generator
 import pathlib
 
@@ -17,13 +19,16 @@ class FFProbeResult(NamedTuple):
 
 
 def ffprobe(file_path) -> FFProbeResult:
-    command_array = [r".\ffprobe.exe",
+    temp: str = Config.ffprobe_path
+    command_array = [r'./ffprobe',
                      "-v", "quiet",
                      "-print_format", "json",
                      "-show_format",
                      "-show_streams",
                      file_path]
-    result = subprocess.run(command_array, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+
+    result = subprocess.run(command_array, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                            universal_newlines=True)
     return FFProbeResult(return_code=result.returncode,
                          json=json.loads(result.stdout),
                          error=result.stderr)
@@ -39,8 +44,9 @@ def transcoding(path_temp, path_o):
                 cv = 'h264'
     f = open("ffmpeg_log.txt", "w")
     p = subprocess.call(
-        r'.\ffmpeg.exe -i {} -metadata:s:a:0 language=rus -c:v {} -c:a copy -b:v 2M -sn {}'.format(path_temp, cv,
-                                                                                                   path_o), stderr=f)
+        r'./ffmpeg -i {} -metadata:s:a:0 language=rus -c:v {} -c:a copy -b:v 2M -sn {}'.format(
+            path_temp, cv,
+            path_o), stderr=f)
     os.remove(path_temp)
 
 
