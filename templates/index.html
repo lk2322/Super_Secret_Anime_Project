@@ -10,12 +10,15 @@
                     </div>
 
                     <!-- TODO Здесь список новых ониме -->
-                    {% for name in new_anime %}
-                        <a href="123">
+                    {% for anime in update_anime %}
+                        <a href={{ url_for('anime', anime_id=anime.id) }}>
                             <div class="wrapper">
                                 <div class="w_one"
-                                     style="background: url({{ url_for('static', filename='img/1.jpg') }}) no-repeat center center;"></div>
-                                <div class="w_two">{{ name.name }}</div>
+                                     style="background: url({{ anime.poster_path }}) no-repeat center center; background-size: contain;"></div>
+                                <div class="grid-container2">
+                                    <div class="h5">{{ anime.title_ru }}</div>
+                                    <div class="h6">{{ anime.title_jp }} / {{ anime.release_year }}</div>
+                                </div>
                             </div>
                         </a>
                     {% endfor %}
@@ -25,39 +28,20 @@
             <div class="col-sm">
                 <div class="card bg-dark">
                     <div class="card-header">
-                        <h3 class="card-title h4">Расписание аниме</h3>
-                        <div class="text-muted small">
-                            <b>Внимание!</b> В графике указаны даты выхода эпизодов на телеэкранах Японии.
-                        </div>
+                        <h3 class="card-title h4">Новое на сайте</h3>
                     </div>
-                    <div class="list-group bg-dark">
-                        <a class="list-group-item list-group-item-action bg-dark text-light" data-bs-toggle="collapse"
-                           href="#collapse1" role="button" aria-expanded="false"
-                           aria-controls="collapse1">Понедельник</a>
-                        <div class="collapse" id="collapse1">
-                            <!-- TODO Здесь цикл закидывает расписание-->
-                            <a href="123">
-                                <div class="wrapper">
-                                    <div class="w_one"
-                                         style="background: url({{ url_for('static', filename='img/1.jpg') }}) no-repeat center center;"></div>
-                                    <div class="w_two">asdasd</div>
+                    {% for anime in new_anime %}
+                        <a href={{ url_for('anime', anime_id=anime.id) }}>
+                            <div class="wrapper">
+                                <div class="w_one"
+                                     style="background: url({{ anime.poster_path }}) no-repeat center center; background-size: contain;"></div>
+                                <div class="grid-container2">
+                                    <div class="h5">{{ anime.title_ru }}</div>
+                                    <div class="h6">{{ anime.title_jp }} / {{ anime.release_year }}</div>
                                 </div>
-                            </a>
-                        </div>
-                        <a class="list-group-item list-group-item-action bg-dark text-light" data-bs-toggle="collapse"
-                           href="#collapse2" role="button" aria-expanded="false" aria-controls="collapse2">Вторник</a>
-                        <a class="list-group-item list-group-item-action bg-dark text-light" data-bs-toggle="collapse"
-                           href="#collapse3" role="button" aria-expanded="false" aria-controls="collapse3">Среда</a>
-                        <a class="list-group-item list-group-item-action bg-dark text-light" data-bs-toggle="collapse"
-                           href="#collapse4" role="button" aria-expanded="false" aria-controls="collapse4">Четверг</a>
-                        <a class="list-group-item list-group-item-action bg-dark text-light" data-bs-toggle="collapse"
-                           href="#collapse5" role="button" aria-expanded="false" aria-controls="collapse5">Пятница</a>
-                        <a class="list-group-item list-group-item-action bg-dark text-light" data-bs-toggle="collapse"
-                           href="#collapse6" role="button" aria-expanded="false" aria-controls="collapse6">Суббота</a>
-                        <a class="list-group-item list-group-item-action bg-dark text-light" data-bs-toggle="collapse"
-                           href="#collapse7" role="button" aria-expanded="false"
-                           aria-controls="collapse7">Воскресенье</a>
-                    </div>
+                            </div>
+                        </a>
+                    {% endfor %}
                 </div>
             </div>
         </div>

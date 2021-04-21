@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <main class="content">
+        <h2 class="text-light" style="margin-left: 10px">Поиск «{{ query }}»</h2>
+        <div class="row">
+            {% for anime in res %}
+                <a class="search_cont col-6 col-sm-6 col-md-4 col-lg-3 col-xl-2 col-ul-2 card border-0"
+                   href={{ url_for('anime', anime_id=anime.id) }}>
+                    <img style="padding-top: 12px" height="290" width="191" src={{ anime.poster_path }}>
+                    <div class="text-secondary h6 search_title_jp">{{ anime.title_jp }} / {{ anime.release_year }}</div>
+                    <div class="text-white h4">{{ anime.title_ru }}</div>
+                </a>
+            {% endfor %}
+        </div>
+    </main>
+
+{% endblock %}

@@ -29,6 +29,8 @@ class Anime(SqlAlchemyBase):
                                      default=datetime.now)
     poster_path = sqlalchemy.Column(sqlalchemy.String)
     videos_path = sqlalchemy.Column(sqlalchemy.String)
+    ep_col = sqlalchemy.Column(sqlalchemy.String)
+    description = sqlalchemy.Column(sqlalchemy.String)
     dubs = orm.relation("Dubs",
                         secondary="anime_to_dubs",
                         backref="animes")

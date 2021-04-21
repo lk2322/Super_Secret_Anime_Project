@@ -1,12 +1,32 @@
-body{
+body {
     background-color: #1c1f22;
 
 }
 
+.anime-titles {
+    margin-left: 12px;
+}
+
+.poster {
+    margin: auto;
+    margin-top: 10px;
+    padding-right: 25px;
+
+}
+
+.content {
+    margin-top: 10px;
+    background: #292d31;
+    border-radius: 10px;
+    padding: 15px;
+}
+
 .sign-in {
     margin-left: 5px;
+    margin-right: 5px;
 }
-.auth-form{
+
+.auth-form {
     margin: auto;
     margin-top: 10px;
     width: 50%;
@@ -14,57 +34,89 @@ body{
     background-color: #292d31;
     border-radius: 10px;
 }
+
 .auth-buttons {
     margin: auto;
 }
-div.container-fluid{
+
+div.container-fluid {
     width: 70%;
 }
 
-div.container{
+div.container-index {
     margin-top: 20px;
 }
-div.card-header{
+
+div.card-header {
     color: white;
 }
 
-div.card-list{
+div.card-list {
     color: white;
     padding: 10px;
 }
-div.col-sm{
+
+div.col-sm {
     padding: 10px;
 }
-a.sheld{
+
+a.sheld {
     color: white;
 }
-div.wrapper
-{
+
+div.wrapper {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: 5px;
+    grid-template-columns: 1fr 2fr;
+    grid-gap: 0px;
     grid-auto-rows: minmax(0px, auto);
     padding: 5px;
     color: white;
     border: 4px white;
 }
-a
-{
+
+.grid-container2 {
+    display: grid;
+    grid-template-rows: 0.5fr 1fr;
+    grid-gap: 0px;
+    grid-auto-rows: minmax(0px, auto);
+    padding: 5px;
+    color: white;
+    border: 4px white;
+}
+
+a {
     text-decoration: none;
 }
 
-.prev{
+.prev {
     margin-left: 35%;
 
 }
-div.w_one
-{
+
+div.w_one {
     grid-column: 1;
     grid-row: 1;
     height: 120px;
 }
 
-div.w_two{
-    grid-column: 2;
-    grid-row: 1;
+.search_cont {
+    background-color: transparent;
+    margin: 10px;
+}
+
+.search_title_jp {
+    margin-bottom: 0;
+    margin-top: 15px;
+}
+
+.container-player-btn {
+    margin: 10px;
+}
+.player-btn {
+    margin: 5px;
+}
+
+.btn:focus {
+    outline: none !important;
+    box-shadow: none;
 }

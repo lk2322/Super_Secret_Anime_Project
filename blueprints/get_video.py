@@ -1,13 +1,12 @@
 import os
+import pathlib
 import re
 import sys
 
 import flask
 from flask import request, Response
-sys.path.insert(0, 'Путь к папке вашего проекта')
-
-from data import db_session
-
+p = pathlib.Path(__file__).parent.parent.absolute()
+os.chdir(p)
 blueprint = flask.Blueprint(
     'get_video',
     __name__,
@@ -22,7 +21,8 @@ def after_request(response):
 
 
 def get_chunk(filename, byte1=None, byte2=None):
-    full_path = f"D:\Фильмы\Ониме\Hyouka! Anilibria_TV [BDRip_720p]\Hyouka!_[02]_[Anilibria_TV]_[BDRip_720p].mkv"
+
+    full_path = os.path.join(p, 'static', 'video', *filename.split('/'))
     file_size = os.stat(full_path).st_size
     start = 0
 
@@ -39,7 +39,7 @@ def get_chunk(filename, byte1=None, byte2=None):
     return chunk, start, length, file_size
 
 
-@blueprint.route('/video/<filename>')
+@blueprint.route('/video/<path:filename>')
 def get_file(filename):
     range_header = request.headers.get('Range', None)
     byte1, byte2 = 0, None

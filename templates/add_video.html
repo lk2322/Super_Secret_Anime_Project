@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form action="" method="post" class="auth-form" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">
+        {{ form.dub.label(class="text-light") }}<br>
+        {{ form.dub(class="form-control") }}<br>
+        {% for error in form.dub.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </div>
+    <div class="mb-3">
+        {{ form.ep.label(class="text-light") }}<br>
+        {{ form.ep(class="form-control") }}<br>
+        {% for error in form.ep.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </div>
+    <div class="mb-3">
+        {{ form.video.label(class="text-light") }}<br>
+        {{ form.video(class="form-control") }}
+        {% for error in form.video.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </div>
+    <div class="mb-3">
+        {{ form.ffmpeg_transcoding.label(class="text-light") }}<br>
+        {{ form.ffmpeg_transcoding(class='form-check-input') }}<br>
+        {% for error in form.ffmpeg_transcoding.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </div>
+
+    <div class="row align-items-start auth-buttons">
+        {{ form.submit(type="submit", class="btn btn-primary col-md-4") }}
+    </div>
+
+
+    {% if message %}
+        <div class="alert alert-danger" role="alert">
+        {{ message }}
+        </div>
+    {% endif %}
+</form>
+
+
+{% endblock %}

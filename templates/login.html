@@ -15,8 +15,17 @@
     </div>
     <p>
         {{ form.password.label(class="text-light") }}<br>
-        {{ form.password(class="form-control", type="password") }}<br>
+        {{ form.password(class="form-control", type="password") }}
         {% for error in form.password.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.remember_me.label(class="text-light") }}<br>
+        {{ form.remember_me(class="form-check-input") }}<br>
+        {% for error in form.remember_me.errors %}
             <p class="alert alert-danger" role="alert">
                 {{ error }}
             </p>

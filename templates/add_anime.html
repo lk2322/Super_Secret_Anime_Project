@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form action="" method="post" class="auth-form" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">
+        {{ form.title_ru.label(class="text-light") }}<br>
+        {{ form.title_ru(class="form-control") }}<br>
+        {% for error in form.title_ru.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </div>
+    <div class="mb-3">
+        {{ form.title_jp.label(class="text-light") }}<br>
+        {{ form.title_jp(class="form-control") }}<br>
+        {% for error in form.title_jp.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </div>
+    <div class="mb-3">
+        {{ form.ep_col.label(class="text-light") }}<br>
+        {{ form.ep_col(class="form-control") }}<br>
+        {% for error in form.ep_col.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </div>
+    <div class="mb-3">
+        {{ form.genres.label(class="text-light") }}<br>
+        {{ form.genres(class="form-control") }}<br>
+        {% for error in form.genres.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </div>
+    <div class="mb-3">
+        {{ form.description.label(class="text-light") }}<br>
+        {{ form.description(class="form-control") }}<br>
+        {% for error in form.description.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </div>
+    <div class="mb-3">
+        {{ form.dubs.label(class="text-light") }}<br>
+        {{ form.dubs(class="form-control") }}<br>
+        {% for error in form.dubs.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </div>
+    <div class="mb-3">
+        {{ form.release_year.label(class="text-light") }}<br>
+        {{ form.release_year(class="form-control") }}<br>
+        {% for error in form.release_year.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </div>
+    <div class="mb-3">
+        {{ form.poster_path.label(class="text-light") }}<br>
+        {{ form.poster_path(class="form-control") }}<br>
+        {% for error in form.poster_path.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </div>
+    <div class="row align-items-start auth-buttons">
+        {{ form.submit(type="submit", class="btn btn-primary col-md-4") }}
+    </div>
+
+
+    {% if message %}
+        <div class="alert alert-danger" role="alert">
+        {{ message }}
+        </div>
+    {% endif %}
+</form>
+
+
+{% endblock %}
