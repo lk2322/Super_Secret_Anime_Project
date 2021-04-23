@@ -1,6 +1,6 @@
 async function get_info_add_dubs() {
     let url = location.pathname + '/' + 'video_info';
-    let response = await fetch(url);
+    let response = await fetch(url, {cache: "no-cache"});
 
     let info = await response.json(); // читаем ответ в формате JSON
     for (let key in info) {

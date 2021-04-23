@@ -1,15 +1,14 @@
 import configparser
-import pathlib
+import os
+
 
 class __Config():
     def __init__(self, path):
         config = configparser.ConfigParser()
-        config.read(path,encoding='utf-8')
-        self.ffmpeg_path = config['FFMPEG']['ffmpeg_path']
-        self.ffprobe_path = config['FFMPEG']['ffprobe_path']
+        config.read(path, encoding='utf-8')
         self.ip = config['SERVER']['ip']
         self.port = config['SERVER']['port']
         self.secret_key = config['SERVER']['secret_key']
+        self.admins = map(int, config['ADMINS']['ids'].split())
 
-
-Config = __Config('config.ini')
+Config = __Config(os.path.abspath('config.ini'))

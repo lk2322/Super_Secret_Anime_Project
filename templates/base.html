@@ -30,7 +30,9 @@
                   <button class="btn btn-outline-success" type="submit">Поиск</button>
                 </form>
                 {% if current_user.is_authenticated %}
-                    <a class="btn btn-outline-primary d-flex sign-in" href="/profile">{{ current_user.name}}</a>
+                    <a class="btn btn-outline-primary sign-in" href="/profile">{{ current_user.name}}</a>
+                    <a class="btn btn-outline-danger" href="/logout">Выйти</a>
+
                 {% else %}
                     <a class="btn btn-outline-primary d-flex sign-in" href="/login">Вход</a>
                 {% endif %}

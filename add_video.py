@@ -19,8 +19,11 @@ class FFProbeResult(NamedTuple):
 
 
 def ffprobe(file_path) -> FFProbeResult:
-    temp: str = Config.ffprobe_path
-    command_array = [r'./ffprobe',
+    if os.name == 'nt':
+        command = r'./ffprobe'
+    elif os.name == 'posix':
+        command = 'ffprobe'
+    command_array = [command,
                      "-v", "quiet",
                      "-print_format", "json",
                      "-show_format",
@@ -43,10 +46,16 @@ def transcoding(path_temp, path_o):
             else:
                 cv = 'h264'
     f = open("ffmpeg_log.txt", "w")
+    if os.name == 'nt':
+        command = r'./ffmpeg'
+        shell = False
+    elif os.name == 'posix':
+        command = 'ffmpeg'
+        shell = True
     p = subprocess.call(
-        r'./ffmpeg -i {} -metadata:s:a:0 language=rus -c:v {} -c:a copy -b:v 2M -sn {}'.format(
-            path_temp, cv,
-            path_o), stderr=f)
+        '{} -i {} -metadata:s:a:0 language=rus -c:v {} -c:a copy -b:v 2M -sn {}'.format(command,
+                                                                                         path_temp, cv,
+                                                                                         path_o), stderr=f, shell=shell)
     os.remove(path_temp)
 
 
@@ -83,8 +92,7 @@ def save_video(anime_id, ep, dub, video, ffmpeg_tr: bool):
         info_dub = info.get(dub)
         web_path = f'{anime_id}/{dub}/{name}'
         if info_dub:
-            if not info_dub.get(ep):
-                info_dub[ep] = web_path
+            info_dub[ep] = web_path
         else:
             info[dub] = {ep: web_path}
     with open(info_path, "w") as data:

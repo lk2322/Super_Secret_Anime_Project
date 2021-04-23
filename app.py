@@ -2,11 +2,12 @@ import datetime
 import os
 import pathlib
 
-from flask import Flask, render_template, redirect, url_for, request, Response
+from flask import Flask, render_template, redirect, url_for, request, Response, g
 from sqlalchemy import desc, func
 
 from add_video import save_video
 from config import Config
+from data.genres import Genres
 from utils.id_gen import id_generator
 
 from data import db_session
@@ -16,10 +17,10 @@ from data.users import User
 from data.dubs import Dubs
 from forms import RegisterForm, LoginForm, AddAnime_Form, Add_Dub_Genre_Form, Add_VideoForm
 from blueprints import get_video
-from flask_login import LoginManager, login_user, current_user
+from flask_login import LoginManager, login_user, current_user, logout_user
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'sadasd'
+app.config['SECRET_KEY'] = Config.secret_key
 db_session.global_init("main.db")
 app.register_blueprint(get_video.blueprint)
 login_manager = LoginManager()
@@ -84,11 +85,22 @@ def register():
 
 @app.route('/search')
 def search():
-    query: str = request.args.get('q')
+    query = request.args.get('q')
+    q_genre = request.args.get('genre')
+    q_dub = request.args.get('dub')
     db_sess = db_session.create_session()
-    res = db_sess.query(Anime).filter((Anime.title_ru.ilike(f'%{query}%')) | (Anime.title_jp.ilike(f'%{query}%')))
+    res = db_sess.query(Anime).filter(
+        (Anime.title_ru.ilike(f'%{query}%')) | (Anime.title_jp.ilike(f'%{query}%')) | (Anime.dubs.any(name=q_dub)) | (
+            Anime.genres.any(name=q_genre)))
     db_sess.close()
-    return render_template('search.html', res=res, title=f'Поиск: {query}', query=query)
+    title = []
+    if query:
+        title.append(query)
+    if q_dub:
+        title.append(q_dub)
+    if q_genre:
+        title.append(q_genre)
+    return render_template('search.html', res=res, title=f'Поиск: {", ".join(title)}', query=title)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -110,16 +122,44 @@ def login():
     return render_template('login.html', title='Авторизация', form=form)
 
 
-@app.route('/anime/<int:anime_id>')
-def anime(anime_id: int):
-    db_sess = db_session.create_session()
-    anime = db_sess.query(Anime).filter(Anime.id == anime_id).first()
-    dubs = anime.dubs
-    db_sess.close()
-    return render_template('anime.html', title=anime.title_ru, poster=anime.poster_path, title_tr=anime.title_ru,
-                           title_jp=anime.title_jp,
-                           ep_col=anime.ep_col,
-                           year=anime.release_year, description=anime.description, dubs=dubs)
+@app.route('/profile')
+def profile():
+    if current_user.is_authenticated:
+        db_sess = db_session.create_session()
+        fav = db_sess.query(User).filter(User.id == current_user.id).first().favorites
+        db_sess.close()
+        return render_template('profile.html', fav=fav, is_admin=check_admin(current_user))
+    return Response(status=401)
+
+
+@app.route('/admin', methods=['GET', 'POST'])
+def admin():
+    if check_admin(current_user):
+        form = Add_Dub_Genre_Form()
+        form2 = AddAnime_Form()
+        if request.method == 'GET':
+            return render_template('admin.html', form=form, form2=form2)
+        if request.method == 'POST':
+            if form2.validate_on_submit():
+                add_edit_anime(form2, False)
+                return redirect('/admin')
+            if form.validate_on_submit():
+                db_sess = db_session.create_session()
+                dub = Dubs(name=form.name.data)
+                db_sess.add(dub)
+                db_sess.commit()
+                db_sess.close()
+                return redirect('/admin')
+
+    return Response(status=401)
+
+
+@app.route('/logout')
+def logout():
+    if current_user.is_authenticated:
+        logout_user()
+        return redirect('/')
+    return Response(status=401)
 
 
 @app.route('/random_anime')
@@ -130,12 +170,11 @@ def random_anime():
     return redirect(url_for('anime', anime_id=anime_id))
 
 
-@app.route('/add_anime', methods=['GET'])
-def add_anime():
-    if check_admin(current_user):
-        form = AddAnime_Form()
-        return render_template('add_anime.html', form=form)
-    return redirect('/')
+def add_genre_to_db(name: str, db_sess):
+    """Нужно передать db_session, а после самому закрыть"""
+    genre = Genres(name=name)
+    db_sess.add(genre)
+    db_sess.commit()
 
 
 def add_edit_anime(form, edit: bool, anime_id: int = 0):
@@ -150,6 +189,14 @@ def add_edit_anime(form, edit: bool, anime_id: int = 0):
     anime.ep_col = form.ep_col.data
     anime.description = form.description.data
     anime.release_year = form.release_year.data
+    if form.genres.data:
+        genres = form.genres.data.split(',')
+        for i in genres:
+            genre = db_sess.query(Genres).filter(Genres.name == i).first()
+            if not genre:
+                add_genre_to_db(i, db_sess)
+                genre = db_sess.query(Genres).filter(Genres.name == i).first()
+            anime.genres.append(genre)
     if form.dubs.data:
         dubs = form.dubs.data.split(',')
         for i in dubs:
@@ -180,45 +227,14 @@ def edit_anime(anime_id):
             anime = db_sess.query(Anime).filter(Anime.id == anime_id).first()
             form = AddAnime_Form(obj=anime)
             form.dubs.data = ','.join([i.name for i in anime.dubs])
-            return render_template('add_anime.html', form=form)
+            form.genres.data = ','.join([i.name for i in anime.genres])
+            db_sess.close()
+            return render_template('edit_anime.html', form=form)
     elif request.method == 'POST':
         if check_admin(current_user):
             form = AddAnime_Form()
             if form.validate_on_submit():
                 add_edit_anime(form, True, anime_id)
-    return redirect('/')
-
-
-@app.route('/add_anime', methods=['POST'])
-def add_anime_post():
-    form = AddAnime_Form()
-    if form.validate_on_submit():
-        if not check_admin(current_user):
-            return redirect('/')
-        add_edit_anime(form, False)
-    # TODO Добавлять жанры
-    return redirect('/')
-
-
-@app.route('/add_dub', methods=['GET'])
-def add_dub():
-    if check_admin(current_user):
-        form = Add_Dub_Genre_Form()
-        return render_template('add_dub.html', form=form)
-    return redirect('/')
-
-
-@app.route('/add_dub', methods=['POST'])
-def add_dub_post():
-    form = Add_Dub_Genre_Form()
-    if form.validate_on_submit():
-        if not check_admin(current_user):
-            return redirect('/')
-        db_sess = db_session.create_session()
-        dub = Dubs(name=form.name.data)
-        db_sess.add(dub)
-        db_sess.commit()
-        db_sess.close()
     return redirect('/')
 
 
@@ -238,6 +254,7 @@ def add_video(anime_id):
                 path = save_video(anime_id, form.ep.data, form.dub.data, form.video.data, form.ffmpeg_transcoding.data)
                 anime.videos_path = path
                 anime.modified_date = datetime.datetime.now()
+                db_sess.commit()
         db_sess.close()
     return redirect('/')
 
@@ -268,11 +285,21 @@ def bookmark(anime_id):
             db_sess.close()
             return 'Added'
         return 'Not in bookmarks'
-    return Response('Unauthorized', 401)
+    return Response(status=401)
+
+
+@app.route('/anime/<int:anime_id>')
+def anime(anime_id: int):
+    db_sess = db_session.create_session()
+    anime = db_sess.query(Anime).filter(Anime.id == anime_id).first()
+    dubs = anime.dubs
+    genres = anime.genres
+    is_admin = check_admin(current_user)
+    db_sess.close()
+    return render_template('anime.html', anime=anime, dubs=dubs, genres=genres, is_admin=is_admin)
 
 
 def init():
-
     pathlib.Path('static/img/posters').mkdir(parents=True, exist_ok=True)
     pathlib.Path('static/video').mkdir(parents=True, exist_ok=True)
     pathlib.Path('temp').mkdir(parents=True, exist_ok=True)
@@ -282,11 +309,11 @@ def init():
         db_sess.add(role)
     else:
         role = db_sess.query(Roles).filter(Roles.name == 'Admin').first()
-    # TODO Добавлять админов из env
-    user = db_sess.query(User).filter(User.id == 1).first()
-    if user:
-        if role not in user.roles:
-            user.roles.append(role)
+    for i in Config.admins:
+        user = db_sess.query(User).filter(User.id == i).first()
+        if user:
+            if role not in user.roles:
+                user.roles.append(role)
     db_sess.commit()
     db_sess.close()
 

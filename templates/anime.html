@@ -6,35 +6,55 @@
             <div class="row">
                 <div class="col-md-auto poster">
                     <img width="250" height="350"
-                         src={{ "/" + poster }}>
+                         src={{ "/" + anime.poster_path }}>
                 </div>
                 <div class="col container">
                     {% if current_user.is_authenticated %}
-                        <button id="bookmark" type="button" class="btn btn-primary" onclick="add_to_favorite()">Добавить в закладки</button>
+                        <button id="bookmark" type="button" class="btn btn-primary" onclick="add_to_favorite()">Добавить
+                            в закладки
+                        </button>
+
+                    {% endif %}
+                    {% if is_admin %}
+                        <button class="btn btn-outline-warning"
+                                onclick="window.location.href = location.pathname + '/edit_anime';">
+                            Редактировать
+                        </button>
+                        <button class="btn btn-outline-danger"
+                                onclick="window.location.href = location.pathname + '/add_video';">
+                            Добавить видео
+                        </button>
                     {% endif %}
 
                     <div class="anime-titles">
-                        <h1 class="text-light row">{{ title_tr }}</h1>
-                        <h6 class="text-light row">{{ title_jp }}</h6>
+                        <h1 class="text-light row">{{ anime.title_ru }}</h1>
+                        <h6 class="text-light row">{{ anime.title_jp }}</h6>
                     </div>
                     <hr class="text-light">
                     <div class="anime-info">
                         <dl class="row">
                             <dt class="col-6 col-sm-4 text-white-50">Эпизоды</dt>
-                            <dd class="col-6 col-sm-8 mb-1 text-light">{{ ep_col }}</dd>
+                            <dd class="col-6 col-sm-8 mb-1 text-light">{{ anime.ep_col }}</dd>
                             <dt class="col-6 col-sm-4 font-weight-normal text-white-50">Жанр</dt>
-                            <dd class="col-6 col-sm-8 mb-1 overflow-h text-light">Тест
-                                <!-- TODO цикл закидывает жанры --> </dd>
+                            <dd class="col-6 col-sm-8 mb-1 overflow-h text-light">{% for genre in genres %}
+                                <a class="desc_link" href="/search?genre={{ genre.name }}">{{ genre.name }}</a>
+                                {% if not loop.last %}
+                                    <span>&#44;</span>
+                                {% endif %}
+                            {% endfor %}</dd>
                             <dt class="col-6 col-sm-4 font-weight-normal text-white-50">Год выхода</dt>
-                            <dd class="col-6 col-sm-8 mb-1 text-light">{{ year }}</dd>
-                            <dt class="col-6 col-sm-4 font-weight-normal text-white-50">Озвучка</dt>
-                            <dd class="col-6 col-sm-8 mb-1 text-light">{% for dub in dubs %}
-                                {{ dub.name + ', ' }}
-                            {% endfor %}
-                            </dd>
+                            <dd class="col-6 col-sm-8 mb-1 text-light">{{ anime.release_year }}</dd>
+                            {% if dubs %}
+                                <dt class="col-6 col-sm-4 font-weight-normal text-white-50">Озвучка</dt>
+                                <dd class="col-6 col-sm-8 mb-1 text-light">{% for dub in dubs %}
+                                    <a class="desc_link" href="/search?dub={{ dub.name }}">{{ dub.name }}</a>
+                                    {{ ", " if not loop.last else "" }}
+                                {% endfor %}
+                                </dd>
+                            {% endif %}
                         </dl>
                         <hr class="text-light">
-                        <p class="text-white">{{ description }}</p>
+                        <p class="text-white">{{ anime.description }}</p>
                     </div>
                 </div>
             </div>

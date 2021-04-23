@@ -2,9 +2,12 @@
 
 {% block content %}
     <main class="content">
-        <p class="h2 text-light" style="margin-left: 10px; align='justify';">Поиск «{{ query|join(', ') }}»</p>
+                  {% if is_admin %}
+                  <a class="btn btn-outline-danger" style="margin-left: 10px" href="/admin">Админ панель</a>
+              {% endif %}
+            <h2 class="col-9 text-light" style="margin-left: 10px">В закладках</h2>
         <div class="row">
-            {% for anime in res %}
+            {% for anime in fav|reverse %}
                 <a class="search_cont col-6 col-sm-6 col-md-4 col-lg-3 col-xl-2 col-ul-2 card border-0"
                    href={{ url_for('anime', anime_id=anime.id) }}>
                     <img style="padding-top: 12px" height="290" width="191" src={{ anime.poster_path }}>

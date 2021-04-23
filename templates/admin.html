@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <main class="content">
+        <h2 class="col-9 text-light" style="margin-left: 10px">Админка</h2>
+        <div class="row" style="margin: 10px">
+            <div class="col">
+                <form action="" method="post" enctype="multipart/form-data">
+                    <h3 class="text-light">Добавить озвучку</h3>
+
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.name.label(class="text-light") }}<br>
+                        {{ form.name(class="form-control") }}<br>
+                        {% for error in form.name.errors %}
+                            <p class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </p>
+                        {% endfor %}
+                    </div>
+                    <div class="row align-items-start auth-buttons">
+                        {{ form.submit(type="submit", class="btn btn-primary col-md-4") }}
+                    </div>
+
+
+                    {% if message %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endif %}
+                </form>
+            </div>
+            <div class="col">
+                <form action="" method="post" enctype="multipart/form-data">
+                    <h3 class="text-light">Добавить ониме</h3>
+                    {{ form2.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form2.title_ru.label(class="text-light") }}<br>
+                        {{ form2.title_ru(class="form-control") }}<br>
+                        {% for error in form2.title_ru.errors %}
+                            <p class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </p>
+                        {% endfor %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form2.title_jp.label(class="text-light") }}<br>
+                        {{ form2.title_jp(class="form-control") }}<br>
+                        {% for error in form2.title_jp.errors %}
+                            <p class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </p>
+                        {% endfor %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form2.ep_col.label(class="text-light") }}<br>
+                        {{ form2.ep_col(class="form-control") }}<br>
+                        {% for error in form2.ep_col.errors %}
+                            <p class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </p>
+                        {% endfor %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form2.genres.label(class="text-light") }}<br>
+                        {{ form2.genres(class="form-control") }}<br>
+                        {% for error in form2.genres.errors %}
+                            <p class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </p>
+                        {% endfor %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form2.description.label(class="text-light") }}<br>
+                        {{ form2.description(class="form-control") }}<br>
+                        {% for error in form2.description.errors %}
+                            <p class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </p>
+                        {% endfor %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form2.dubs.label(class="text-light") }}<br>
+                        {{ form2.dubs(class="form-control") }}<br>
+                        {% for error in form2.dubs.errors %}
+                            <p class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </p>
+                        {% endfor %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form2.release_year.label(class="text-light") }}<br>
+                        {{ form2.release_year(class="form-control") }}<br>
+                        {% for error in form2.release_year.errors %}
+                            <p class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </p>
+                        {% endfor %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form2.poster_path.label(class="text-light") }}<br>
+                        {{ form2.poster_path(class="form-control") }}<br>
+                        {% for error in form2.poster_path.errors %}
+                            <p class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </p>
+                        {% endfor %}
+                    </div>
+                    <div class="row align-items-start auth-buttons">
+                        {{ form2.submit(type="submit", class="btn btn-primary col-md-4") }}
+                    </div>
+
+
+                    {% if message %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </main>
+
+{% endblock %}

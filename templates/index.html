@@ -9,7 +9,6 @@
                         <h3 class="card-title h4">Обновление аниме</h3>
                     </div>
 
-                    <!-- TODO Здесь список новых ониме -->
                     {% for anime in update_anime %}
                         <a href={{ url_for('anime', anime_id=anime.id) }}>
                             <div class="wrapper">
