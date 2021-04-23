@@ -201,7 +201,8 @@ def add_edit_anime(form, edit: bool, anime_id: int = 0):
         dubs = form.dubs.data.split(',')
         for i in dubs:
             dub = db_sess.query(Dubs).filter(Dubs.name == i).first()
-            anime.dubs.append(dub)
+            if dub:
+                anime.dubs.append(dub)
     if form.description.data:
         anime.description = form.description.data
     else:
@@ -314,6 +315,7 @@ def init():
         if user:
             if role not in user.roles:
                 user.roles.append(role)
+    # TODO забирать админки у отсутсвующих в конфиге id
     db_sess.commit()
     db_sess.close()
 
