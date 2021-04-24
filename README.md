@@ -23,7 +23,7 @@ git clone https://github.com/lk2322/Super_Secret_Anime_Project
 cd Super_Secret_Anime_Project
 pip install -r requirements.txt
 ```
-В config.ini необходимо заменить secret_key и ids(список пользователей, которым нужно выдать админка)
+В config.ini необходимо заменить secret_key и ids(список пользователей, которым нужно выдать админку)
 ### Установка ffmpeg и ffprobe
 #### Windows
 [Скачайте](https://www.gyan.dev/ffmpeg/builds) билд ffmpeg для Windows и расположите ffmpeg.exe и ffprobe.exe в корне проекта
