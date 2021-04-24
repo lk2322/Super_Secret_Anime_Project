@@ -11,4 +11,5 @@ class __Config():
         self.secret_key = config['SERVER']['secret_key']
         self.admins = map(int, config['ADMINS']['ids'].split())
 
+
 Config = __Config(os.path.abspath('config.ini'))

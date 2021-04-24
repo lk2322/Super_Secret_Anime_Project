@@ -4,7 +4,6 @@ from multiprocessing import Process
 from typing import NamedTuple
 import json
 
-from config import Config
 from utils.id_gen import id_generator
 import pathlib
 

@@ -57,6 +57,7 @@ def index():
     db_sess = db_session.create_session()
     new_anime = db_sess.query(Anime).order_by(desc(Anime.created_date)).limit(5).all()
     updated_anime = db_sess.query(Anime).order_by(desc(Anime.modified_date)).limit(5).all()
+    db_sess.close()
 
     return render_template('index.html', title='Главная страница', new_anime=new_anime, update_anime=updated_anime)
 
@@ -328,4 +329,4 @@ def init():
 
 if __name__ == "__main__":
     init()
-    app.run(Config.ip, Config.port, threaded=True, debug=True)
+    app.run(Config.ip, Config.port, threaded=True)
