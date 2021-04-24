@@ -20,10 +20,12 @@
                                 onclick="window.location.href = location.pathname + '/edit_anime';">
                             Редактировать
                         </button>
+                        {% if dubs %}
                         <button class="btn btn-outline-danger"
                                 onclick="window.location.href = location.pathname + '/add_video';">
                             Добавить видео
                         </button>
+                            {% endif %}
                     {% endif %}
 
                     <div class="anime-titles">

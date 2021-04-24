@@ -2,7 +2,7 @@ import datetime
 import os
 import pathlib
 
-from flask import Flask, render_template, redirect, url_for, request, Response, g
+from flask import Flask, render_template, redirect, url_for, request, Response, g, abort
 from sqlalchemy import desc, func
 
 from add_video import save_video
@@ -44,6 +44,11 @@ def load_user(user_id):
     user = db_sess.query(User).get(user_id)
     db_sess.close()
     return user
+
+
+@app.errorhandler(404)
+def not_auth_error(e):
+    return render_template('error.html', message='Такой страницы не существует')
 
 
 @app.route('/')
@@ -128,8 +133,8 @@ def profile():
         db_sess = db_session.create_session()
         fav = db_sess.query(User).filter(User.id == current_user.id).first().favorites
         db_sess.close()
-        return render_template('profile.html', fav=fav, is_admin=check_admin(current_user))
-    return Response(status=401)
+        return render_template('profile.html', fav=fav, is_admin=check_admin(current_user), title='Закладки')
+    return render_template('error.html', message='Недостаточно прав'), 401
 
 
 @app.route('/admin', methods=['GET', 'POST'])
@@ -138,7 +143,7 @@ def admin():
         form = Add_Dub_Genre_Form()
         form2 = AddAnime_Form()
         if request.method == 'GET':
-            return render_template('admin.html', form=form, form2=form2)
+            return render_template('admin.html', form=form, form2=form2, title='Админка')
         if request.method == 'POST':
             if form2.validate_on_submit():
                 add_edit_anime(form2, False)
@@ -151,7 +156,7 @@ def admin():
                 db_sess.close()
                 return redirect('/admin')
 
-    return Response(status=401)
+    return render_template('error.html', message='Недостаточно прав'), 401
 
 
 @app.route('/logout')
@@ -159,7 +164,7 @@ def logout():
     if current_user.is_authenticated:
         logout_user()
         return redirect('/')
-    return Response(status=401)
+    return render_template('error.html', message='Недостаточно прав'), 401
 
 
 @app.route('/random_anime')
@@ -236,7 +241,7 @@ def edit_anime(anime_id):
             form = AddAnime_Form()
             if form.validate_on_submit():
                 add_edit_anime(form, True, anime_id)
-    return redirect('/')
+    return render_template('error.html', message='Недостаточно прав'), 401
 
 
 @app.route('/anime/<int:anime_id>/add_video', methods=['GET', 'POST'])
@@ -256,8 +261,9 @@ def add_video(anime_id):
                 anime.videos_path = path
                 anime.modified_date = datetime.datetime.now()
                 db_sess.commit()
+            return redirect('/')
         db_sess.close()
-    return redirect('/')
+    return render_template('error.html', message='Недостаточно прав'), 401
 
 
 @app.route('/anime/<int:anime_id>/video_info')
@@ -286,7 +292,7 @@ def bookmark(anime_id):
             db_sess.close()
             return 'Added'
         return 'Not in bookmarks'
-    return Response(status=401)
+    return render_template('error.html', message='Недостаточно прав'), 401
 
 
 @app.route('/anime/<int:anime_id>')
@@ -297,7 +303,7 @@ def anime(anime_id: int):
     genres = anime.genres
     is_admin = check_admin(current_user)
     db_sess.close()
-    return render_template('anime.html', anime=anime, dubs=dubs, genres=genres, is_admin=is_admin)
+    return render_template('anime.html', anime=anime, dubs=dubs, genres=genres, is_admin=is_admin, title=anime.title_ru)
 
 
 def init():
