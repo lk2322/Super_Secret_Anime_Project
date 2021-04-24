@@ -3,7 +3,7 @@
 
 <div>
 
-![Lines of code](https://img.shields.io/tokei/lines/github/lk2322/Super_Secret_Anime_Project)
+![Liness of code](https://img.shields.io/tokei/lines/github/lk2322/Super_Secret_Anime_Project)
 
 </div>
 
