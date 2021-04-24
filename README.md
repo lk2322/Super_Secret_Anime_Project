@@ -3,7 +3,7 @@
 
 <div>
 
-![Lines of code](https://img.shields.io/tokei/lines/github/lk2322/Super_Secret_Anime_Project)
+![Liness of code](https://img.shields.io/tokei/lines/github/lk2322/Super_Secret_Anime_Project)
 
 </div>
 
@@ -12,7 +12,7 @@
 
 Сайт на flask, с помощью которого можно просматривать аниме
 Функции:
-- Регестрация и логин
+- Регистрация и логин
 - Система ролей для управления сайтом (админы)
 - Полное управление сайтом через админку
 - Удобный плеер для просмотра
@@ -23,7 +23,7 @@ git clone https://github.com/lk2322/Super_Secret_Anime_Project
 cd Super_Secret_Anime_Project
 pip install -r requirements.txt
 ```
-В config.ini необходимо заменить secret_key и ids(список пользователей, которым нужно выдать админка)
+В config.ini необходимо заменить secret_key и ids(список пользователей, которым нужно выдать админку)
 ### Установка ffmpeg и ffprobe
 #### Windows
 [Скачайте](https://www.gyan.dev/ffmpeg/builds) билд ffmpeg для Windows и расположите ffmpeg.exe и ffprobe.exe в корне проекта
